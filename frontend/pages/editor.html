@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Editor - Resume Creator</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .editor-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .editor-preview {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .form-section input,
+        .form-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-section textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-section input:focus,
+        .form-section textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-save {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px;
+        }
+
+        .btn-download {
+            background-color: #2196f3;
+            color: white;
+            padding: 12px;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+            padding: 8px;
+        }
+
+        .resume-header {
+            margin-bottom: 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1rem;
+        }
+
+        .resume-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-contact {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section h2 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+
+        .resume-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .resume-item h3 {
+            margin-bottom: 0.25rem;
+        }
+
+        .resume-item .company,
+        .resume-item .school {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .resume-item .date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Resume Creator</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="editor-container">
+        <!-- Form Section -->
+        <div class="editor-form">
+            <h2>Edit Resume</h2>
+
+            <!-- Personal Info -->
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                <input type="text" id="fullName" placeholder="Full Name">
+                <input type="email" id="email" placeholder="Email">
+                <input type="tel" id="phone" placeholder="Phone">
+                <input type="text" id="location" placeholder="Location">
+                <textarea id="summary" placeholder="Professional Summary"></textarea>
+            </div>
+
+            <!-- Experience -->
+            <div class="form-section">
+                <h3>Experience</h3>
+                <div id="experienceList"></div>
+                <button id="addExperienceBtn" class="btn-add">+ Add Experience</button>
+            </div>
+
+            <!-- Education -->
+            <div class="form-section">
+                <h3>Education</h3>
+                <div id="educationList"></div>
+                <button id="addEducationBtn" class="btn-add">+ Add Education</button>
+            </div>
+
+            <!-- Skills -->
+            <div class="form-section">
+                <h3>Skills</h3>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" id="skillInput" placeholder="Enter a skill">
+                    <button id="addSkillBtn" class="btn-add">Add</button>
+                </div>
+                <div id="skillsList"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button id="saveBtn" class="btn-save">Save Resume</button>
+                <button id="downloadBtn" class="btn-download">Download PDF</button>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="editor-preview">
+            <div id="resumePreview"></div>
+        </div>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/editor.js"></script>
+    <script>
+        // Initialize editor when page loads
+        window.addEventListener('DOMContentLoaded', initEditor);
+    </script>
+</body>
+</html>

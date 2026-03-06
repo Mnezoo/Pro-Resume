@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade to Pro - Resume Creator</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script>
+    <style>
+        .checkout-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .checkout-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-details {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .plan-details h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 1rem 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        #paypal-button-container {
+            margin-top: 2rem;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .payment-method {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+        }
+
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        #stripe-payment {
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Resume Creator</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h2>Upgrade to Pro</h2>
+            <p>Unlock unlimited resumes and all premium features</p>
+        </div>
+
+        <div class="plan-details">
+            <h3>Pro Plan</h3>
+            <div class="price">$4.99</div>
+            <p>One-time payment</p>
+            <ul class="features-list">
+                <li>✓ Unlimited resumes</li>
+                <li>✓ All professional templates</li>
+                <li>✓ Download as PDF & Word</li>
+                <li>✓ Cover letters</li>
+                <li>✓ Priority support</li>
+            </ul>
+        </div>
+
+        <div class="payment-methods">
+            <div class="payment-method active" onclick="selectPayment('paypal')">
+                <strong>PayPal</strong>
+            </div>
+            <div class="payment-method" onclick="selectPayment('stripe')">
+                <strong>Card</strong>
+            </div>
+        </div>
+
+        <!-- PayPal Payment -->
+        <div id="paypal-payment">
+            <div id="paypal-button-container"></div>
+        </div>
+
+        <!-- Stripe Payment -->
+        <div id="stripe-payment">
+            <form id="payment-form">
+                <div id="card-element"></div>
+                <div id="card-errors" role="alert" style="color: #f44336; margin: 1rem 0;"></div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 1rem;">Pay $4.99</button>
+            </form>
+        </div>
+
+        <div class="back-link">
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/paypal.js"></script>
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = '../index.html';
+        }
+
+        function selectPayment(method) {
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+            event.target.closest('.payment-method').classList.add('active');
+
+            if (method === 'paypal') {
+                document.getElementById('paypal-payment').style.display = 'block';
+                document.getElementById('stripe-payment').style.display = 'none';
+                initPayPalButtons();
+            } else {
+                document.getElementById('paypal-payment').style.display = 'none';
+                document.getElementById('stripe-payment').style.display = 'block';
+                initStripePayment();
+            }
+        }
+
+        // Initialize PayPal on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initPayPalButtons();
+        });
+    </script>
+</body>
+</html>
