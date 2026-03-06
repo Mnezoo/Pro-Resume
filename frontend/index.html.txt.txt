@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create professional resumes in minutes with ResumeBuilder Pro. Free and premium features with PayPal payments.">
+    <meta name="keywords" content="resume builder, cv maker, job application, professional resume, paypal">
+    <meta name="author" content="Mnezoo">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="ResumeBuilder Pro - Create Your Perfect Resume">
+    <meta property="og:description" content="Professional resume builder with templates, real-time preview, and instant downloads">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://resumebuilder.pro">
+    
+    <title>ResumeBuilder Pro - Create Your Professional Resume in Minutes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <h1 class="logo">ResumeBuilder Pro</h1>
+            <div class="nav-links">
+                <button class="btn-nav" onclick="showSection('home')">Home</button>
+                <button class="btn-nav" onclick="showSection('editor')">Create Resume</button>
+                <button class="btn-nav" onclick="showSection('pricing')">Pricing</button>
+                <div id="userNav" style="display: none;">
+                    <button class="btn-nav" onclick="showSection('dashboard')">Dashboard</button>
+                    <button class="btn-nav" onclick="handleLogout()">Logout</button>
+                </div>
+                <button id="authBtn" class="btn-auth" onclick="toggleLoginModal()">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="hero">
+            <h2>Create Your Professional Resume in Minutes</h2>
+            <p>Stand out from the crowd with our easy-to-use resume builder</p>
+            <button class="btn-primary btn-lg" onclick="showSection('editor')">Start Creating</button>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>📝 Easy to Use</h3>
+                <p>Simple drag-and-drop interface with real-time preview</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Professional Templates</h3>
+                <p>Multiple design options to choose from</p>
+            </div>
+            <div class="feature-card">
+                <h3>📥 Download Anywhere</h3>
+                <p>PDF, Word, and JSON formats supported</p>
+            </div>
+            <div class="feature-card">
+                <h3>☁️ Cloud Save</h3>
+                <p>Auto-save your work securely</p>
+            </div>
+            <div class="feature-card">
+                <h3>💳 Secure Payments</h3>
+                <p>PayPal integration for safe transactions</p>
+            </div>
+            <div class="feature-card">
+                <h3>🚀 Instant Export</h3>
+                <p>Download and share your resume instantly</p>
+            </div>
+        </div>
+
+        <section class="cta-section">
+            <h2>Ready to land your dream job?</h2>
+            <p>Join thousands of job seekers who've created their perfect resume</p>
+            <button class="btn-primary btn-lg" onclick="showSection('editor')">Create Your Resume Now</button>
+        </section>
+    </section>
+
+    <!-- Editor Section -->
+    <section id="editor" class="section">
+        <div class="container-editor">
+            <h2>Resume Editor</h2>
+            
+            <div class="editor-container">
+                <!-- Sidebar -->
+                <div class="editor-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Personal Information</h3>
+                        <input type="text" placeholder="Full Name" id="fullName" class="input-field" onchange="updateResume()">
+                        <input type="email" placeholder="Email" id="email" class="input-field" onchange="updateResume()">
+                        <input type="tel" placeholder="Phone" id="phone" class="input-field" onchange="updateResume()">
+                        <input type="text" placeholder="Location" id="location" class="input-field" onchange="updateResume()">
+                        <input type="url" placeholder="Website" id="website" class="input-field" onchange="updateResume()">
+                        <input type="url" placeholder="LinkedIn" id="linkedin" class="input-field" onchange="updateResume()">
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Professional Summary</h3>
+                        <textarea placeholder="Brief professional summary" id="summary" class="textarea-field" onchange="updateResume()"></textarea>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Experience</h3>
+                        <button class="btn-secondary" onclick="addExperience()">+ Add Experience</button>
+                        <div id="experienceList"></div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Education</h3>
+                        <button class="btn-secondary" onclick="addEducation()">+ Add Education</button>
+                        <div id="educationList"></div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Skills</h3>
+                        <input type="text" placeholder="Add a skill (press Enter)" id="skillInput" class="input-field" onkeypress="handleSkillInput(event)">
+                        <div id="skillsList" class="skills-list"></div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Template</h3>
+                        <select id="templateSelect" class="input-field" onchange="changeTemplate()">
+                            <option value="modern">Modern</option>
+                            <option value="classic">Classic</option>
+                            <option value="minimal">Minimal</option>
+                            <option value="creative">Creative</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="resume-preview" id="resumePreview">
+                    <div class="preview-header">
+                        <h2 id="previewName">Your Name</h2>
+                        <div class="preview-contact">
+                            <p id="previewEmail">email@example.com</p>
+                            <p id="previewPhone">+1 (000) 000-0000</p>
+                            <p id="previewLocation">City, State</p>
+                        </div>
+                    </div>
+
+                    <div class="preview-section" id="previewSummary" style="display:none;">
+                        <h3>Professional Summary</h3>
+                        <p id="previewSummaryText"></p>
+                    </div>
+
+                    <div class="preview-section" id="previewExperience" style="display:none;">
+                        <h3>Experience</h3>
+                        <div id="previewExperienceList"></div>
+                    </div>
+
+                    <div class="preview-section" id="previewEducation" style="display:none;">
+                        <h3>Education</h3>
+                        <div id="previewEducationList"></div>
+                    </div>
+
+                    <div class="preview-section" id="previewSkills" style="display:none;">
+                        <h3>Skills</h3>
+                        <div id="previewSkillsList" class="preview-skills"></div>
+                    </div>
+
+                    <div class="preview-actions">
+                        <button class="btn-primary" onclick="downloadPDF()">📥 Download PDF</button>
+                        <button class="btn-secondary" onclick="downloadWord()">📄 Download Word</button>
+                        <button class="btn-secondary" onclick="saveResume()">💾 Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the perfect plan for your resume building needs</p>
+            </div>
+
+            <div id="subscriptionInfo" style="display: none; margin-bottom: 2rem;">
+                <div class="subscription-status">
+                    <p id="subscriptionText"></p>
+                </div>
+            </div>
+
+            <div class="pricing-cards">
+                <!-- Free Plan -->
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span class="price-period">/month</span></div>
+                    <p>Perfect for getting started</p>
+                    <ul>
+                        <li>1 Resume</li>
+                        <li>Basic Templates</li>
+                        <li>Download as PDF</li>
+                        <li>Display Ads</li>
+                        <li>Community Support</li>
+                    </ul>
+                    <button class="btn-primary" onclick="showSection('editor')">Get Started</button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="pricing-card">
+                    <h3>Premium</h3>
+                    <div class="price">$4.99<span class="price-period">/month</span></div>
+                    <p>For serious job seekers</p>
+                    <ul>
+                        <li>Unlimited Resumes</li>
+                        <li>All Templates</li>
+                        <li>PDF & Word Export</li>
+                        <li>No Ads</li>
+                        <li>Priority Support</li>
+                        <li>AI Suggestions</li>
+                    </ul>
+                    <div id="paypal-button-container-premium"></div>
+                </div>
+
+                <!-- Lifetime Plan (Popular) -->
+                <div class="pricing-card popular">
+                    <h3>⭐ Lifetime</h3>
+                    <div class="price">$19.99<span class="price-period">one-time</span></div>
+                    <p>Best value - Forever access</p>
+                    <ul>
+                        <li>Unlimited Resumes</li>
+                        <li>All Templates</li>
+                        <li>PDF & Word Export</li>
+                        <li>No Ads</li>
+                        <li>Priority Support</li>
+                        <li>AI Suggestions</li>
+                        <li>Lifetime Updates</li>
+                    </ul>
+                    <div id="paypal-button-container-lifetime"></div>
+                </div>
+            </div>
+
+            <!-- Cancel Subscription Button -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <button id="cancelSubscriptionBtn" class="cancel-subscription-btn" onclick="cancelSubscription()" style="display: none;">
+                    Cancel Subscription
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section" style="display: none;">
+        <div class="dashboard-container">
+            <h2>My Resumes</h2>
+            <button class="btn-primary" onclick="showSection('editor')">+ New Resume</button>
+            
+            <div class="subscription-banner">
+                <p>Current Plan: <strong id="currentPlanText">Free</strong></p>
+                <button class="btn-secondary" onclick="showSection('pricing')">Upgrade</button>
+            </div>
+
+            <div id="resumesList" class="resumes-grid"></div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="toggleLoginModal()">&times;</span>
+            
+            <div id="loginForm" class="auth-form">
+                <h2>Login</h2>
+                <input type="email" placeholder="Email" id="loginEmail" class="input-field">
+                <input type="password" placeholder="Password" id="loginPassword" class="input-field">
+                <button class="btn-primary" onclick="handleLogin()">Login</button>
+                <p>Don't have an account? <a href="#" onclick="switchToRegister()">Sign Up</a></p>
+            </div>
+
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <h2>Sign Up</h2>
+                <input type="text" placeholder="Username" id="registerUsername" class="input-field">
+                <input type="email" placeholder="Email" id="registerEmail" class="input-field">
+                <input type="password" placeholder="Password" id="registerPassword" class="input-field">
+                <input type="password" placeholder="Confirm Password" id="registerConfirmPassword" class="input-field">
+                <button class="btn-primary" onclick="handleRegister()">Sign Up</button>
+                <p>Already have an account? <a href="#" onclick="switchToLogin()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notificationToast" class="notification" style="display: none;"></div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/paypal.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

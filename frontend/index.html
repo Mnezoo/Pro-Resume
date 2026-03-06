@@ -1,135 +1,61 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create professional resumes in minutes">
-    <title>Resume Creator - Build Your Professional Resume</title>
+    <title>ResumeBuilder Pro</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <h1>Resume Creator</h1>
+        <div class="nav-content">
+            <h1 class="logo">ResumeBuilder Pro</h1>
+            <div class="nav-links">
+                <button class="btn-nav" onclick="showSection('home')">Home</button>
+                <button class="btn-nav" onclick="showSection('editor')">Create Resume</button>
+                <button class="btn-nav" onclick="showSection('pricing')">Pricing</button>
+                <button id="authBtn" class="btn-auth" onclick="toggleLoginModal()">Login</button>
             </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#" onclick="openLoginModal()">Login</a></li>
-                <li><a href="#" onclick="openRegisterModal()" class="btn-primary">Sign Up</a></li>
-            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Create Your Professional Resume in Minutes</h2>
-                <p>Build, customize, and download your perfect resume with our easy-to-use editor</p>
-                <button class="btn-primary btn-large" onclick="openLoginModal()">Get Started</button>
+    <section id="home" class="section active">
+        <div class="hero">
+            <h2>Create Your Professional Resume in Minutes</h2>
+            <button class="btn-primary btn-lg" onclick="showSection('editor')">Start Creating</button>
+        </div>
+    </section>
+
+    <section id="editor" class="section">
+        <h2>Resume Editor</h2>
+        <div class="editor-container">
+            <div class="editor-sidebar">
+                <input type="text" placeholder="Full Name" id="fullName" onchange="updateResume()">
+                <input type="email" placeholder="Email" id="email" onchange="updateResume()">
+            </div>
+            <div class="resume-preview">
+                <h2 id="previewName">Your Name</h2>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Why Choose Resume Creator?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>Easy to Use</h3>
-                    <p>Intuitive editor makes creating resumes simple and fast</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Professional Templates</h3>
-                    <p>Choose from beautifully designed professional templates</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Download as PDF</h3>
-                    <p>Export your resume as a high-quality PDF file</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Secure & Private</h3>
-                    <p>Your data is encrypted and kept completely private</p>
-                </div>
-            </div>
-        </div>
+    <section id="pricing" class="section">
+        <h2>Pricing</h2>
+        <div id="paypal-button-container-premium"></div>
+        <div id="paypal-button-container-lifetime"></div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <h2>Pricing Plans</h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Free</h3>
-                    <p class="price">$0</p>
-                    <ul>
-                        <li>✓ Create 1 resume</li>
-                        <li>✓ Basic templates</li>
-                        <li>✓ Download as PDF</li>
-                    </ul>
-                    <button class="btn-secondary" onclick="openRegisterModal()">Get Started</button>
-                </div>
-                <div class="pricing-card featured">
-                    <h3>Pro</h3>
-                    <p class="price">$4.99</p>
-                    <ul>
-                        <li>✓ Unlimited resumes</li>
-                        <li>✓ All templates</li>
-                        <li>✓ Download as PDF & Word</li>
-                        <li>✓ Cover letters</li>
-                        <li>✓ Priority support</li>
-                    </ul>
-                    <button class="btn-primary" onclick="purchasePro()">Upgrade to Pro</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLoginModal()">&times;</span>
-            <h2>Login</h2>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit" class="btn-primary">Login</button>
-            </form>
-            <p>Don't have an account? <a href="#" onclick="switchToRegister()">Sign Up</a></p>
-        </div>
+    <div id="loginModal" class="modal" style="display:none;">
+        <input type="email" placeholder="Email" id="loginEmail">
+        <button onclick="handleLogin()">Login</button>
     </div>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeRegisterModal()">&times;</span>
-            <h2>Sign Up</h2>
-            <form id="registerForm" onsubmit="handleRegister(event)">
-                <input type="text" id="regName" placeholder="Full Name" required>
-                <input type="email" id="regEmail" placeholder="Email" required>
-                <input type="password" id="regPassword" placeholder="Password" required>
-                <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required>
-                <button type="submit" class="btn-primary">Sign Up</button>
-            </form>
-            <p>Already have an account? <a href="#" onclick="switchToLogin()">Login</a></p>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Resume Creator. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="js/app.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script>
+    <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/paypal.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
